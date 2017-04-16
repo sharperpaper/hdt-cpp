@@ -193,7 +193,7 @@ INCLUDEPATH += ../include
 LIBCDSBASE = ../../libcds-v1.0.12/src
 
 #For serd
-INCLUDEPATH += F:/serd-0.26.0/serd/
+INCLUDEPATH += F:/git/serd/serd/
 
 INCLUDEPATH += $${LIBCDSBASE}/utils \
     $${LIBCDSBASE}/static/bitsequence \
@@ -218,3 +218,6 @@ win32-g++:contains(QMAKE_HOST.arch, x86_64):{
 # Windows Visual Studio
 
 win32:INCLUDEPATH += "F:\git\zlib\bin"
+
+win32:QMAKE_CXXFLAGS+=/Zi
+win32:QMAKE_LFLAGS+= /INCREMENTAL:NO /Debug
