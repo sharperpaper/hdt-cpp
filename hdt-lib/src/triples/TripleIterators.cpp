@@ -183,7 +183,7 @@ void SequentialSearchIteratorTripleID::goToStart()
 
 
 
-TripleID *RandomAccessIterator::get(unsigned int idx)
+TripleID *RandomAccessIterator::get(size_t idx)
 {
 //	cout << "RandomAccessIterator: " << currentIdx << "/" << idx << " PREV/NEXT: "<< it->hasPrevious() << ", " << it->hasNext() << endl;
 	while(currentIdx > idx && it->hasPrevious()) {
@@ -214,7 +214,7 @@ TripleID *RandomAccessIterator::get(unsigned int idx)
 
 
 
-unsigned int RandomAccessIterator::getNumElements()
+size_t RandomAccessIterator::getNumElements()
 {
 	return numElements;
 }

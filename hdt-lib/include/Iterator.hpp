@@ -131,9 +131,9 @@ public:
 	virtual bool canGoTo() {
 		return false;
 	}
-	virtual void goTo(unsigned int /*pos*/) {
+    virtual void goTo(size_t /*pos*/) {
 	}
-	virtual bool findNextOccurrence(unsigned int /*value*/, unsigned char /*component*/) {
+    virtual bool findNextOccurrence(size_t /*value*/, unsigned char /*component*/) {
 		return false;
 	}
 	virtual TripleComponentOrder getOrder() {

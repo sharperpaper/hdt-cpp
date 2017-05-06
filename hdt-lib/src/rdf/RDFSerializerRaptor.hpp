@@ -30,7 +30,7 @@ public:
 	RDFSerializerRaptor(const char *fileName, RDFNotation notation);
 	RDFSerializerRaptor(std::ostream &s, RDFNotation notation);
 	virtual ~RDFSerializerRaptor();
-	void serialize(IteratorTripleString *it, ProgressListener *listener=NULL, unsigned int totalTriples=0);
+    void serialize(IteratorTripleString *it, ProgressListener *listener=NULL, size_t totalTriples=0);
 };
 
 }

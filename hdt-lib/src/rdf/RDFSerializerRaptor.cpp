@@ -145,9 +145,9 @@ const char *RDFSerializerRaptor::getType(RDFNotation notation) {
 
 #include <stdio.h>
 
-void RDFSerializerRaptor::serialize(IteratorTripleString *it, ProgressListener *listener, unsigned int totalTriples)
+void RDFSerializerRaptor::serialize(IteratorTripleString *it, ProgressListener *listener, size_t totalTriples)
 {
-	unsigned int numTriple=0;
+    size_t numTriple=0;
 	while( it->hasNext() ) {
 		TripleString *ts = it->next();
 

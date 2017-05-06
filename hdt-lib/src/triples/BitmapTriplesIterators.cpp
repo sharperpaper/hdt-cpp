@@ -61,14 +61,14 @@ BitmapTriplesSearchIterator::BitmapTriplesSearchIterator(BitmapTriples *trip, Tr
 #endif
 
 #if 0
-    for(uint mposZ=0;mposZ<adjZ.getSize(); mposZ++) {
-        uint z = adjZ.get(mposZ);
+    for(size_t mposZ=0;mposZ<adjZ.getSize(); mposZ++) {
+        size_t z = adjZ.get(mposZ);
 
-        uint posY = adjZ.findListIndex(mposZ);
+        size_t posY = adjZ.findListIndex(mposZ);
 
-        uint y = adjY.get(posY);
+        size_t y = adjY.get(posY);
 
-        uint x = adjY.findListIndex(posY)+1;
+        size_t x = adjY.findListIndex(posY)+1;
 
         cerr << "FWD2 posZ: " << mposZ << " posY: " << posY << "\t";
         cerr << "Triple: " << x << ", " << y << ", " << z << endl;
@@ -247,7 +247,7 @@ bool BitmapTriplesSearchIterator::canGoTo() {
     return true;
 }
 
-void BitmapTriplesSearchIterator::goTo(unsigned int pos) {
+void BitmapTriplesSearchIterator::goTo(size_t pos) {
     if ((pos) >= maxZ) {
 			throw std::runtime_error("Cannot goTo on this pattern.");
 	}
@@ -259,7 +259,7 @@ TripleComponentOrder BitmapTriplesSearchIterator::getOrder() {
     return triples->order;
 }
 
-bool BitmapTriplesSearchIterator::findNextOccurrence(unsigned int value, unsigned char component) {
+bool BitmapTriplesSearchIterator::findNextOccurrence(size_t value, unsigned char component) {
     if(triples->order==SPO) {
 	if(component==3 && patY!=0) {
 
@@ -438,7 +438,7 @@ TripleComponentOrder MiddleWaveletIterator::getOrder() {
     return triples->order;
 }
 
-bool MiddleWaveletIterator::findNextOccurrence(unsigned int value, unsigned char component) {
+bool MiddleWaveletIterator::findNextOccurrence(size_t value, unsigned char component) {
     if(component==1) {
         // Search subject, check each predicate ocurrence.
         while(x!=value) {
@@ -629,7 +629,7 @@ TripleComponentOrder IteratorY::getOrder() {
     return triples->order;
 }
 
-bool IteratorY::findNextOccurrence(unsigned int value, unsigned char component) {
+bool IteratorY::findNextOccurrence(size_t value, unsigned char component) {
     throw std::logic_error("Not Implemented");
 }
 
@@ -674,10 +674,10 @@ ObjectIndexIterator::ObjectIndexIterator(BitmapTriples *trip, TripleID &pat) :
     goToStart();
 }
 
-unsigned int ObjectIndexIterator::getPosZ(unsigned int indexObjectPos) {
+size_t ObjectIndexIterator::getPosZ(size_t indexObjectPos) {
 #ifdef SAVE_ADJ_LIST
-    unsigned int posZ=0;
-    unsigned int posAdjList = adjIndex.get(indexObjectPos);
+    size_t posZ=0;
+    size_t posAdjList = adjIndex.get(indexObjectPos);
 
     try {
         posZ = adjZ.find(posAdjList, patZ);
@@ -688,7 +688,7 @@ unsigned int ObjectIndexIterator::getPosZ(unsigned int indexObjectPos) {
     }
 
 #else
-    unsigned int posZ = adjIndex.get(index);
+    size_t posZ = adjIndex.get(index);
 
     while( (z=adjZ.get(posZ))!=patZ) {
         posZ++;
@@ -697,16 +697,16 @@ unsigned int ObjectIndexIterator::getPosZ(unsigned int indexObjectPos) {
     return posZ;
 }
 
-unsigned int ObjectIndexIterator::getY(unsigned int index) {
+size_t ObjectIndexIterator::getY(size_t index) {
 
 #ifdef SAVE_ADJ_LIST
-    unsigned int posAdjList = adjIndex.get(index);
-    unsigned int myY = adjY.get(posAdjList);
+    size_t posAdjList = adjIndex.get(index);
+    size_t myY = adjY.get(posAdjList);
     return myY;
 #else
-    unsigned int posZ = adjIndex.get(index);
-    unsigned int posY = adjZ.findListIndex(posZ);
-    unsigned int myY = adjY.get(posY);
+    size_t posZ = adjIndex.get(index);
+    size_t posY = adjZ.findListIndex(posZ);
+    size_t myY = adjY.get(posY);
     return myY;
 #endif
 
@@ -726,7 +726,7 @@ bool ObjectIndexIterator::hasNext()
 
 TripleID *ObjectIndexIterator::next()
 {
-    unsigned int posY = adjIndex.get(posIndex);
+    size_t posY = adjIndex.get(posIndex);
 
     z = patZ;
     y = patY!=0 ? patY : adjY.get(posY);
@@ -747,7 +747,7 @@ TripleID *ObjectIndexIterator::previous()
 {
     posIndex--;
 
-    unsigned int posY = adjIndex.get(posIndex);
+    size_t posY = adjIndex.get(posIndex);
 
     z = patZ;
     y = patY!=0 ? patY : adjY.get(posY);
@@ -769,7 +769,7 @@ void ObjectIndexIterator::calculateRange() {
         while (minIndex <= maxIndex) {
             //cerr << "binSearch range: " << minIndex << ", " << maxIndex << endl;
             long long mid = (minIndex + maxIndex) >> 1;
-            unsigned int predicate=getY(mid);
+            size_t predicate=getY(mid);
 
             if (patY > predicate) {
                 minIndex = mid + 1;
@@ -782,7 +782,7 @@ void ObjectIndexIterator::calculateRange() {
                 cerr << "At minIndex: " << minIndex << " => Y=" << getY(minIndex) << endl;
 
                 // Do Sequential search
-                unsigned int left = mid;
+                size_t left = mid;
                 while(left>minIndex && predicate==patY) {
                     left--;
                     predicate = getY(left);
@@ -790,7 +790,7 @@ void ObjectIndexIterator::calculateRange() {
                 }
                 minIndex= predicate==patY ? left : left+1;
 
-                unsigned int right = mid;
+                size_t right = mid;
                 predicate = patY;
                 while(right<maxIndex && predicate==patY) {
                     right++;
@@ -836,14 +836,14 @@ void ObjectIndexIterator::calculateRange() {
 #endif
 
 //                cerr << "Left bound" << endl;
-//                for(unsigned int i=minIndex-2; i<=minIndex+2; i++) {
+//                for(size_t i=minIndex-2; i<=minIndex+2; i++) {
 //                    if(i>=0) {
 //                        cerr << "Found: " << i << "=>" << getY(i) << " " << ((i>= minIndex && i<=maxIndex) ? '*': ' ') << " Z=" << adjZ.get(getPosZ(i))<< endl;
 //                    }
 //                }
 
 //                cerr << "Right bound" << endl;
-//                for(unsigned int i=maxIndex-2; i<=maxIndex+2; i++) {
+//                for(size_t i=maxIndex-2; i<=maxIndex+2; i++) {
 //                    if(i>=0) {
 //                        cerr << "Found: " << i << "=>" << getY(i) << " " << ((i>= minIndex && i<=maxIndex) ? '*': ' ') << " Z=" << adjZ.get(getPosZ(i))<< endl;
 //                    }
@@ -879,7 +879,7 @@ bool ObjectIndexIterator::canGoTo()
     return true;
 }
 
-void ObjectIndexIterator::goTo(unsigned int pos)
+void ObjectIndexIterator::goTo(size_t pos)
 {
     if(minIndex+pos>maxIndex) {
 	throw std::runtime_error("Cannot goto beyond last element");
@@ -887,10 +887,10 @@ void ObjectIndexIterator::goTo(unsigned int pos)
     posIndex = minIndex+pos;
 }
 
-bool ObjectIndexIterator::findNextOccurrence(unsigned int value, unsigned char component) {
+bool ObjectIndexIterator::findNextOccurrence(size_t value, unsigned char component) {
     if(component==1) {
         if(patY!=0) {
-            unsigned int posZ=0, posY=0;
+            size_t posZ=0, posY=0;
             while(x!=value) {
                 posZ = getPosZ(posIndex);
                 posY = adjZ.findListIndex(posZ);
@@ -954,9 +954,9 @@ TripleID *BTInterleavedIterator::next()
 {
     size_t posY = adjZ.findListIndex(posZ);
 
-    unsigned int z = adjZ.get(posZ);
-    unsigned int y = adjY.get(posY);
-    unsigned int x = adjY.findListIndex(posY)+1;
+    size_t z = adjZ.get(posZ);
+    size_t y = adjY.get(posY);
+    size_t x = adjY.findListIndex(posY)+1;
 
     posZ+=skip;
 
